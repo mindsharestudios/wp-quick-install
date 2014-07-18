@@ -177,18 +177,18 @@ if ( isset( $_GET['action'] ) ) {
 
 							// Debug mod
 							if ( (int) $_POST['debug'] == 1 ) {
-								$line = "define('WP_DEBUG', 'true');\r\n";
+								$line = "define('WP_DEBUG', true);\r\n";
 
 								// Display error
 								if ( (int) $_POST['debug_display'] == 1 ) {
 									$line .= "\r\n\n " . "/** Affichage des erreurs à l'écran */" . "\r\n";
-									$line .= "define('WP_DEBUG_DISPLAY', 'true');\r\n";
+									$line .= "define('WP_DEBUG_DISPLAY', true);\r\n";
 								}
 
 								// To write error in a log files
 								if ( (int) $_POST['debug_log'] == 1 ) {
 									$line .= "\r\n\n " . "/** Ecriture des erreurs dans un fichier log */" . "\r\n";
-									$line .= "define('WP_DEBUG_LOG', 'true');\r\n";
+									$line .= "define('WP_DEBUG_LOG', true);\r\n";
 								}
 							}
 
