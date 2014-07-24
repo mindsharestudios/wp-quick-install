@@ -178,43 +178,41 @@ if ( isset( $_GET['action'] ) ) {
 							// Debug mod
 							if ( (int) $_POST['debug'] == 1 ) {
 								$line = "define('WP_DEBUG', true);\r\n";
+								$line .= "if ( WP_DEBUG ) {\r\n";
 
 								// Display error
 								if ( (int) $_POST['debug_display'] == 1 ) {
-									$line .= "\r\n\n " . "/** Affichage des erreurs à l'écran */" . "\r\n";
 									$line .= "define('WP_DEBUG_DISPLAY', true);\r\n";
+								} else {
+									$line .= "define('WP_DEBUG_DISPLAY', false);\r\n";
+									$line .= "@ini_set( 'display_errors', 0 );\r\n";
 								}
 
 								// To write error in a log files
 								if ( (int) $_POST['debug_log'] == 1 ) {
-									$line .= "\r\n\n " . "/** Ecriture des erreurs dans un fichier log */" . "\r\n";
 									$line .= "define('WP_DEBUG_LOG', true);\r\n";
 								}
+								$line .= "}\r\n";
 							}
 
 							// We add the extras constant
 							if ( ! empty( $_POST['uploads'] ) ) {
-								$line .= "\r\n\n " . "/** Dossier de destination des fichiers uploadés */" . "\r\n";
 								$line .= "define('UPLOADS', '" . sanit( $_POST['uploads'] ) . "');";
 							}
 
 							if ( (int) $_POST['post_revisions'] >= 0 ) {
-								$line .= "\r\n\n " . "/** Désactivation des révisions d'articles */" . "\r\n";
 								$line .= "define('WP_POST_REVISIONS', " . (int) $_POST['post_revisions'] . ");";
 							}
 
 							if ( (int) $_POST['disallow_file_edit'] == 1 ) {
-								$line .= "\r\n\n " . "/** Désactivation de l'éditeur de thème et d'extension */" . "\r\n";
 								$line .= "define('DISALLOW_FILE_EDIT', true);";
 							}
 
 							if ( (int) $_POST['autosave_interval'] >= 60 ) {
-								$line .= "\r\n\n " . "/** Intervalle des sauvegardes automatique */" . "\r\n";
 								$line .= "define('AUTOSAVE_INTERVAL', " . (int) $_POST['autosave_interval'] . ");";
 							}
 
-							$line .= "\r\n\n " . "/** On augmente la mémoire limite */" . "\r\n";
-							$line .= "define('WP_MEMORY_LIMIT', '96M');" . "\r\n";
+							$line .= "define('WP_MEMORY_LIMIT', '256M');" . "\r\n";
 
 							break;
 						case 'DB_NAME'     :
@@ -852,7 +850,7 @@ else { ?>
 
 
 							<div id="debug_options" style="display:none;">
-								<label><input type="checkbox" name="debug_display" id="debug_display" value="1" /> <?php echo _('Enable WP Debug');?></label>
+								<label><input type="checkbox" name="debug_display" id="debug_display" value="0" /> <?php echo _('Enable WP Debug');?></label>
 								<br/>
 								<label><input type="checkbox" name="debug_log" id="debug_log" value="1" /> <?php echo _('Write errors in a log file <em>(wp-content/debug.log)</em>. ');?></label>
 							</div>
