@@ -274,7 +274,7 @@ if(isset($_GET['action'])) {
 			// WordPress installation
 			wp_install($_POST['weblog_title'], $_POST['user_login'], $_POST['admin_email'], (int) $_POST['blog_public'], '', $_POST['admin_password']);
 
-			// We update the options with the right siteurl et homeurl value
+			// We update the options with the right siteurl and homeurl value
 			$protocol = !is_ssl() ? 'http' : 'https';
 			$get = basename(dirname(__FILE__)).'/index.php/wp-admin/install.php?action=install_wp';
 			$dir = str_replace('../', '', $directory);
