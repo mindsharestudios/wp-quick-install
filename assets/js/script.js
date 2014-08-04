@@ -1,13 +1,11 @@
 $(document).ready(function() {
 
 	// Debug mode
-	var $debug		   = $('#debug'),
-		$debug_options = $('#debug_options'),
-		$debug_display = $debug_options.find('#debug_display');
-		$debug_log 	   = $debug_options.find('#debug_log');
+	var $debug = $('#debug'), $debug_options = $('#debug_options'), $debug_display = $debug_options.find('#debug_display');
+	$debug_log = $debug_options.find('#debug_log');
 
 	$debug.change(function() {
-		if ( $debug.is(':checked') ) {
+		if($debug.is(':checked')) {
 			$debug.parent().hide().siblings('p').hide();
 			$debug_options.slideDown();
 			$debug_display.attr('checked', true);
@@ -15,8 +13,8 @@ $(document).ready(function() {
 		}
 	});
 
-	$('#debug_display, #debug_log').change(function(){
-		if ( ! $debug_display.is(':checked') && ! $debug_log.is(':checked') ) {
+	$('#debug_display, #debug_log').change(function() {
+		if(!$debug_display.is(':checked') && !$debug_log.is(':checked')) {
 			$debug_options.slideUp().siblings().slideDown();
 			$debug.removeAttr('checked');
 		}
@@ -24,74 +22,74 @@ $(document).ready(function() {
 
 	/*--------------------------*/
 	/*	Install folder
-	/*--------------------------*/
+	 /*--------------------------*/
 
-	if ( typeof data.directory !='undefined' ) {
+	if(typeof data.directory != 'undefined') {
 		$('#directory').val(data.directory);
 	}
 
 	/*--------------------------*/
 	/*	Blog Title
-	/*--------------------------*/
+	 /*--------------------------*/
 
-	if ( typeof data.title !='undefined' ) {
+	if(typeof data.title != 'undefined') {
 		$('#weblog_title').val(data.title);
 	}
 
 	/*--------------------------*/
 	/*	Language
-	/*--------------------------*/
+	 /*--------------------------*/
 
-	if ( typeof data.language !='undefined' ) {
+	if(typeof data.language != 'undefined') {
 		$('#language').val(data.language);
 	}
 
 	/*--------------------------*/
 	/*	Database
-	/*--------------------------*/
+	 /*--------------------------*/
 
-	if ( typeof data.db !='undefined' ) {
+	if(typeof data.db != 'undefined') {
 
-		if ( typeof data.db.dbname !='undefined' ) {
-		$('#dbname').val(data.db.dbname);
+		if(typeof data.db.dbname != 'undefined') {
+			$('#dbname').val(data.db.dbname);
 		}
 
-		if ( typeof data.db.dbhost !='undefined' ) {
+		if(typeof data.db.dbhost != 'undefined') {
 			$('#dbhost').val(data.db.dbhost);
 		}
 
-		if ( typeof data.db.prefix !='undefined' ) {
+		if(typeof data.db.prefix != 'undefined') {
 			$('#prefix').val(data.db.prefix);
 		}
 
-		if ( typeof data.db.uname !='undefined' ) {
+		if(typeof data.db.uname != 'undefined') {
 			$('#uname').val(data.db.uname);
 		}
 
-		if ( typeof data.db.pwd !='undefined' ) {
+		if(typeof data.db.pwd != 'undefined') {
 			$('#pwd').val(data.db.pwd);
 		}
 
-		if ( typeof data.db.default_content !='undefined' ) {
+		if(typeof data.db.default_content != 'undefined') {
 			( parseInt(data.db.default_content) == 1 ) ? $('#default_content').attr('checked', 'checked') : $('#default_content').removeAttr('checked');
 		}
 	}
 
 	/*--------------------------*/
 	/*	Admin user
-	/*--------------------------*/
+	 /*--------------------------*/
 
-	if ( typeof data.admin !='undefined' ) {
+	if(typeof data.admin != 'undefined') {
 
-		if ( typeof data.admin.user_login !='undefined' ) {
+		if(typeof data.admin.user_login != 'undefined') {
 			$('#user_login').val(data.admin.user_login);
 		}
 
-		if ( typeof data.admin.password !='undefined' ) {
+		if(typeof data.admin.password != 'undefined') {
 			$('#admin_password').val(data.admin.password);
 		}
 
-		if ( typeof data.admin.email !='undefined' ) {
+		if(typeof data.admin.email != 'undefined') {
 			$('#admin_email').val(data.admin.email);
 		}
 
@@ -99,87 +97,87 @@ $(document).ready(function() {
 
 	/*--------------------------*/
 	/*	Enable SEO
-	/*--------------------------*/
+	 /*--------------------------*/
 
-	if ( typeof data.seo !='undefined' ) {
+	if(typeof data.seo != 'undefined') {
 		( parseInt(data.seo) == 1 ) ? $('#blog_public').attr('checked', 'checked') : $('#blog_public').removeAttr('checked');
 	}
 
 	/*--------------------------*/
 	/*	Themes
-	/*--------------------------*/
+	 /*--------------------------*/
 
-	if ( typeof data.activate_theme !='undefined' ) {
+	if(typeof data.activate_theme != 'undefined') {
 		( parseInt(data.activate_theme) == 1 ) ? $('#activate_theme').attr('checked', 'checked') : $('#activate_theme').removeAttr('checked');
 	}
 
-	if ( typeof data.delete_default_themes !='undefined' ) {
+	if(typeof data.delete_default_themes != 'undefined') {
 		( parseInt(data.delete_default_themes) == 1 ) ? $('#delete_default_themes').attr('checked', 'checked') : $('#delete_default_themes').removeAttr('checked');
 	}
 
 	/*--------------------------*/
 	/*	Plugins
-	/*--------------------------*/
+	 /*--------------------------*/
 
-	if ( typeof data.plugins !='undefined' ) {
-		$('#plugins').val( data.plugins.join(';') );
+	if(typeof data.plugins != 'undefined') {
+		$('#plugins').val(data.plugins.join(';'));
 	}
 
-	if ( typeof data.plugins_premium !='undefined' ) {
+	if(typeof data.plugins_premium != 'undefined') {
 		( parseInt(data.plugins_premium) == 1 ) ? $('#plugins_premium').attr('checked', 'checked') : $('#plugins_premium').removeAttr('checked');
 	}
 
-	if ( typeof data.activate_plugins !='undefined' ) {
+	if(typeof data.activate_plugins != 'undefined') {
 		( parseInt(data.activate_plugins) == 1 ) ? $('#activate_plugins').attr('checked', 'checked') : $('#activate_plugins').removeAttr('checked');
 	}
 
 	/*--------------------------*/
 	/*	Permalinks
-	/*--------------------------*/
+	 /*--------------------------*/
 
-	if ( typeof data.permalink_structure !='undefined' ) {
+	if(typeof data.permalink_structure != 'undefined') {
 		$('#permalink_structure').val(data.permalink_structure);
 	}
 
 	/*--------------------------*/
 	/*	Medias
-	/*--------------------------*/
+	 /*--------------------------*/
 
-	if ( typeof data.uploads !='undefined' ) {
+	if(typeof data.uploads != 'undefined') {
 
-		if ( typeof data.uploads.thumbnail_size_w !='undefined' ) {
+		if(typeof data.uploads.thumbnail_size_w != 'undefined') {
 			$('#thumbnail_size_w').val(parseInt(data.uploads.thumbnail_size_w));
 		}
 
-		if ( typeof data.uploads.thumbnail_size_h !='undefined' ) {
+		if(typeof data.uploads.thumbnail_size_h != 'undefined') {
 			$('#thumbnail_size_h').val(parseInt(data.uploads.thumbnail_size_h));
 		}
 
-		if ( typeof data.uploads.thumbnail_crop !='undefined' ) {
+		if(typeof data.uploads.thumbnail_crop != 'undefined') {
 			( parseInt(data.uploads.thumbnail_crop) == 1 ) ? $('#thumbnail_crop').attr('checked', 'checked') : $('#thumbnail_crop').removeAttr('checked');
 		}
 
-		if ( typeof data.uploads.medium_size_w !='undefined' ) {
+		if(typeof data.uploads.medium_size_w != 'undefined') {
 			$('#medium_size_w').val(parseInt(data.uploads.medium_size_w));
 		}
 
-		if ( typeof data.uploads.medium_size_h !='undefined' ) {
+		if(typeof data.uploads.medium_size_h != 'undefined') {
 			$('#medium_size_h').val(parseInt(data.uploads.medium_size_h));
 		}
 
-		if ( typeof data.uploads.large_size_w !='undefined' ) {
+		if(typeof data.uploads.large_size_w != 'undefined') {
 			$('#large_size_w').val(parseInt(data.uploads.large_size_w));
 		}
 
-		if ( typeof data.uploads.large_size_h !='undefined' ) {
+		if(typeof data.uploads.large_size_h != 'undefined') {
 			$('#large_size_h').val(parseInt(data.uploads.large_size_h));
 		}
 
-		if ( typeof data.uploads.upload_dir !='undefined' ) {
+		if(typeof data.uploads.upload_dir != 'undefined') {
 			$('#upload_dir').val(data.uploads.upload_dir);
 		}
 
-		if ( typeof data.uploads.uploads_use_yearmonth_folders !='undefined' ) {
+		if(typeof data.uploads.uploads_use_yearmonth_folders != 'undefined') {
 			( parseInt(data.uploads.uploads_use_yearmonth_folders) == 1 ) ? $('#uploads_use_yearmonth_folders').attr('checked', 'checked') : $('#uploads_use_yearmonth_folders').removeAttr('checked');
 		}
 
@@ -187,24 +185,24 @@ $(document).ready(function() {
 
 	/*--------------------------*/
 	/*	wp-config.php constants
-	/*--------------------------*/
+	 /*--------------------------*/
 
-	if ( typeof data.wp_config !='undefined' ) {
+	if(typeof data.wp_config != 'undefined') {
 
-		if ( typeof data.wp_config.autosave_interval !='undefined' ) {
+		if(typeof data.wp_config.autosave_interval != 'undefined') {
 			$('#autosave_interval').val(data.wp_config.autosave_interval);
 		}
 
-		if ( typeof data.wp_config.post_revisions !='undefined' ) {
+		if(typeof data.wp_config.post_revisions != 'undefined') {
 			$('#post_revisions').val(data.wp_config.post_revisions);
 		}
 
-		if ( typeof data.wp_config.disallow_file_edit !='undefined' ) {
+		if(typeof data.wp_config.disallow_file_edit != 'undefined') {
 			( parseInt(data.wp_config.disallow_file_edit) == 1 ) ? $('#disallow_file_edit').attr('checked', 'checked') : $('#disallow_file_edit').removeAttr('checked');
 		}
 
-		if ( typeof data.wp_config.debug !='undefined' ) {
-			if ( parseInt(data.wp_config.debug) == 1 ) {
+		if(typeof data.wp_config.debug != 'undefined') {
+			if(parseInt(data.wp_config.debug) == 1) {
 				$debug.attr('checked', 'checked');
 				$debug.parent().hide().siblings('p').hide();
 				$debug_options.slideDown();
@@ -217,17 +215,17 @@ $(document).ready(function() {
 
 	}
 
-	var $response  = $('#response');
+	var $response = $('#response');
 
-	$('#submit').click( function() {
+	$('#submit').click(function() {
 
 		errors = false;
 
 		// We hide errors div
 		$('#errors').hide().html('<strong>Warning !</strong>');
 
-		$('input.required').each(function(){
-			if ( $.trim($(this).val()) == '' ) {
+		$('input.required').each(function() {
+			if($.trim($(this).val()) == '') {
 				errors = true;
 				$(this).addClass('error');
 				$(this).css("border", "1px solid #FF0000");
@@ -237,30 +235,31 @@ $(document).ready(function() {
 			}
 		});
 
-		if ( ! errors ) {
+		if(!errors) {
 
 			/*--------------------------*/
 			/*	We verify the database connexion and if WP already exists
-			/*  If there is no errors we install
-			/*--------------------------*/
+			 /*  If there is no errors we install
+			 /*--------------------------*/
 
 			$.post(window.location.href + '?action=check_before_upload', $('form').serialize(), function(data) {
 
 				errors = false;
 				data = $.parseJSON(data);
 
-				if ( data.db == "error etablishing connection" ) {
+				if(data.db == "error establishing connection") {
 					errors = true;
 					$('#errors').show().append('<p style="margin-bottom:0px;">&bull; Error Establishing a Database Connection.</p>');
 				}
 
-				if ( data.wp == "error directory" ) {
+				if(data.wp == "error directory") {
+					//console.dir(data);
 					errors = true;
 					$('#errors').show().append('<p style="margin-bottom:0px;">&bull; WordPress seems to be Already Installed.</p>');
 				}
 
-				if ( ! errors ) {
-					$('form').fadeOut( 'fast', function() {
+				if(!errors) {
+					$('form').fadeOut('fast', function() {
 
 						$('.progress').show();
 
@@ -274,20 +273,20 @@ $(document).ready(function() {
 					});
 				} else {
 					// If there is an error
-					$('html,body').animate( { scrollTop: $( 'html,body' ).offset().top } , 'slow' );
+					$('html,body').animate({ scrollTop: $('html,body').offset().top }, 'slow');
 				}
 			});
 
 		} else {
 			// If there is an error
-			$('html,body').animate( { scrollTop: $( 'input.error:first' ).offset().top-20 } , 'slow' );
+			$('html,body').animate({ scrollTop: $('input.error:first').offset().top - 20 }, 'slow');
 		}
 		return false;
 	});
 
 	// Let's unzip WordPress
 	function unzip_wp() {
-		$response.html("<p>Decompressing Files...</p>" );
+		$response.html("<p>Decompressing Files...</p>");
 		$('.progress-bar').animate({width: "16.5%"});
 		$.post(window.location.href + '?action=unzip_wp', $('form').serialize(), function(data) {
 			wp_config();
@@ -337,10 +336,10 @@ $(document).ready(function() {
 		$('.progress-bar').animate({width: "100%"});
 		$response.hide();
 		$('.progress').delay(500).hide();
-		$.post(window.location.href + '?action=success',$('form').serialize(), function(data) {
+		$.post(window.location.href + '?action=success', $('form').serialize(), function(data) {
 			$('#success').show().append(data);
 		});
-		$.get( 'http://wp-quick-install.com/inc/incr-counter.php' );
+		//$.get('http://wp-quick-install.com/inc/incr-counter.php');
 	}
 
 });
