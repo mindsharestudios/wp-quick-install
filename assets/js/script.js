@@ -86,7 +86,7 @@ $(document).ready(function() {
 		}
 
 		if(typeof data.admin.password != 'undefined') {
-			$('#admin_password').val(data.admin.password);
+			$('#pwd').val(data.admin.password);
 		}
 
 		if(typeof data.admin.email != 'undefined') {
@@ -209,7 +209,7 @@ $(document).ready(function() {
 				$debug_display.attr('checked', true);
 				$debug_log.attr('checked', true);
 			} else {
-				$('#debug').removeAttr('checked');
+				$debug.removeAttr('checked');
 			}
 		}
 
@@ -219,7 +219,7 @@ $(document).ready(function() {
 
 	$('#submit').click(function() {
 
-		errors = false;
+		var errors = false;
 
 		// We hide errors div
 		$('#errors').hide().html('<strong>Warning !</strong>');
@@ -249,13 +249,13 @@ $(document).ready(function() {
 
 				if(data.db == "error establishing connection") {
 					errors = true;
-					$('#errors').show().append('<p style="margin-bottom:0px;">&bull; Error Establishing a Database Connection.</p>');
+					$('#errors').show().append('<p style="margin-bottom:0;">&bull; Error Establishing a Database Connection.</p>');
 				}
 
 				if(data.wp == "error directory") {
 					//console.dir(data);
 					errors = true;
-					$('#errors').show().append('<p style="margin-bottom:0px;">&bull; WordPress seems to be Already Installed.</p>');
+					$('#errors').show().append('<p style="margin-bottom:0;">&bull; WordPress seems to be Already Installed.</p>');
 				}
 
 				if(!errors) {
@@ -293,6 +293,8 @@ $(document).ready(function() {
 		});
 	}
 
+
+	var config_done, install_done, theme_done, plugins_done = false;
 	// Let's create the wp-config.php file
 	function wp_config() {
 		$response.html("<p>File Creation for wp-config...</p>");
@@ -337,7 +339,7 @@ $(document).ready(function() {
 		$response.hide();
 		$('.progress').delay(500).hide();
 		$.post(window.location.href + '?action=success', $('form').serialize(), function(data) {
-			if ($('#errors').css('display') == 'none') {
+			if($('#errors').css('display') == 'none') {
 				$('#success').show().append(data);
 			}
 

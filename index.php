@@ -14,12 +14,14 @@ Last Update: 11 jul 14
 define('WP_API_CORE', 'http://api.wordpress.org/core/version-check/1.7/?locale=');
 define('WPQI_CACHE_PATH', 'cache/');
 define('WPQI_CACHE_CORE_PATH', WPQI_CACHE_PATH.'core/');
-define('WPQI_CACHE_PLUGINS_PATH', WPQI_CACHE_PATH.'plugins/');
+define('WPQI_CACHE_PLUGINS_PATH', getcwd().'/plugins/');
+define('WPQI_PREMIUM_PLUGINS_PATH', 'plugins/');
 
 require('inc/functions.php');
 
 // Force URL with index.php
-if(empty($_GET) && end((explode('/', trim($_SERVER['REQUEST_URI'], '/')))) == 'wp-quick-install') {
+$req_uri = explode('/', trim($_SERVER['REQUEST_URI'], '/'));
+if(empty($_GET) && end($req_uri) == 'wp-quick-install') {
 	header('Location: index.php');
 	die();
 }
@@ -41,9 +43,13 @@ if(file_exists('data.ini')) {
 	$data = json_encode(parse_ini_file('data.ini'));
 }
 
-// We add  ../ to directory
+// We add  ../ to directory if no path is provided
 $directory = !empty($_POST['directory']) ? $_POST['directory'] : '..';
-$directory = rtrim($directory, '/\\').'/'; // trailingslashit
+$directory = rtrim(realpath($directory), '/\\').'/'; // trailingslashit
+// get the WP URL
+$url = wpqi_get_url();
+$url = str_replace(array('wp-quick-install/index.php', 'wp-quick-install/'), '', $url);
+$url = rtrim(realpath($url), '/\\').'/'; // trailingslashit
 
 if(isset($_GET['action'])) {
 
@@ -61,7 +67,7 @@ if(isset($_GET['action'])) {
 			try {
 				$db = new PDO('mysql:host='.$_POST['dbhost'].';dbname='.$_POST['dbname'], $_POST['uname'], $_POST['pwd']);
 			} catch(Exception $e) {
-				$data['db'] = "error etablishing connection";
+				$data['db'] = "error establishing connection";
 			}
 
 			// WordPress test
@@ -105,13 +111,11 @@ if(isset($_GET['action'])) {
 			/*--------------------------*/
 
 			// If we want to put WordPress in a subfolder we create it
-			if(!empty($directory)) {
-				// Let's create the folder
+			if(!file_exists($directory)) {
 				mkdir($directory);
-
-				// We set the good writing rights
-				chmod($directory, 0755);
 			}
+
+			chmod($directory, 0755);
 
 			$zip = new ZipArchive;
 
@@ -119,24 +123,28 @@ if(isset($_GET['action'])) {
 			if($zip->open(WPQI_CACHE_CORE_PATH.'wordpress-'.$wp->version.'-'.$language.'.zip') === TRUE) {
 
 				// Let's unzip
-				$zip->extractTo('.');
+				$zip->extractTo($directory);
+				//$zip->extractTo('.');
 				$zip->close();
 
 				// We scan the folder
-				$files = scandir('wordpress');
+				$files = scandir($directory.'wordpress');
 
 				// We remove the "." and ".." from the current folder and its parent
 				$files = array_diff($files, array('.', '..'));
 
 				// We move the files and folders
-				foreach($files as $file) {
-					rename('wordpress/'.$file, $directory.'/'.$file);
-				}
+				rcopy($directory.'wordpress', $directory);
+				rrmdir($directory.'wordpress');
 
-				rmdir('wordpress'); // We remove WordPress folder
-				unlink($directory.'/license.txt'); // We remove licence.txt
-				unlink($directory.'/readme.html'); // We remove readme.html
-				unlink($directory.'/wp-content/plugins/hello.php'); // We remove Hello Dolly plugin
+				/*foreach($files as $file) {
+					rename($directory.'wordpress/'.$file, $directory.$file);
+				}*/
+
+				//rrmdir($directory.'wordpress'); // We remove WordPress folder recursively
+				unlink($directory.'license.txt'); // We remove licence.txt
+				unlink($directory.'readme.html'); // We remove readme.html
+				unlink($directory.'wp-content/plugins/hello.php'); // We remove Hello Dolly plugin
 			}
 
 			break;
@@ -252,7 +260,7 @@ if(isset($_GET['action'])) {
 			fclose($handle);
 
 			// We set the good rights to the wp-config file
-			chmod($directory.'wp-config.php', 0666);
+			chmod($directory.'wp-config.php', 0644);
 
 			break;
 
@@ -262,6 +270,7 @@ if(isset($_GET['action'])) {
 			/*	Let's install WordPress database
 			/*--------------------------*/
 
+			//die($directory);
 			/** Load WordPress Bootstrap */
 			require_once($directory.'wp-load.php');
 
@@ -275,12 +284,12 @@ if(isset($_GET['action'])) {
 			wp_install($_POST['weblog_title'], $_POST['user_login'], $_POST['admin_email'], (int) $_POST['blog_public'], '', $_POST['admin_password']);
 
 			// We update the options with the right siteurl and homeurl value
-			$protocol = !is_ssl() ? 'http' : 'https';
-			$get = basename(dirname(__FILE__)).'/index.php/wp-admin/install.php?action=install_wp';
-			$dir = str_replace('../', '', $directory);
-			$link = $protocol.'://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
-			$url = str_replace($get, $dir, $link);
-			$url = trim($url, '/');
+//			$protocol = !is_ssl() ? 'http' : 'https';
+//			$get = basename(dirname(__FILE__)).'/index.php/wp-admin/install.php?action=install_wp';
+//			$dir = str_replace('../', '', $directory);
+//			$link = $protocol.'://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
+//			$url = str_replace($get, $dir, $link);
+//			$url = trim($url, '/');
 
 			update_option('siteurl', $url);
 			update_option('home', $url);
@@ -291,7 +300,7 @@ if(isset($_GET['action'])) {
 
 			if($_POST['default_content'] == '1') {
 				wp_delete_post(1, TRUE); // We remove the article "Hello World"
-				wp_delete_post(2, TRUE); // We remove the "Exemple page"
+				wp_delete_post(2, TRUE); // We remove the "Example page"
 			}
 
 			/*--------------------------*/
@@ -466,7 +475,7 @@ if(isset($_GET['action'])) {
 
 				foreach($plugins as $plugin) {
 
-					// We retrieve the plugin XML file to get the link to downlad it
+					// We retrieve the plugin XML file to get the link to download it
 					$plugin_repo = file_get_contents("http://api.wordpress.org/plugins/info/1.0/$plugin.json");
 
 					if($plugin_repo && $plugin = json_decode($plugin_repo)) {
@@ -474,7 +483,7 @@ if(isset($_GET['action'])) {
 						$plugin_path = WPQI_CACHE_PLUGINS_PATH.$plugin->slug.'-'.$plugin->version.'.zip';
 
 						if(!file_exists($plugin_path)) {
-							// We download the lastest version
+							// We download the latest version
 							if($download_link = file_get_contents($plugin->download_link)) {
 								file_put_contents($plugin_path, $download_link);
 							}
@@ -490,10 +499,10 @@ if(isset($_GET['action'])) {
 				}
 			}
 
-			if($_POST['plugins_premium'] == 1) {
+			if(array_key_exists('plugins_premium', $_POST) && $_POST['plugins_premium'] == 1) {
 
 				// We scan the folder
-				$plugins = scandir('plugins');
+				$plugins = scandir(WPQI_PREMIUM_PLUGINS_PATH);
 
 				// We remove the "." and ".." corresponding to the current and parent folder
 				$plugins = array_diff($plugins, array('.', '..'));
@@ -501,7 +510,7 @@ if(isset($_GET['action'])) {
 				// We move the archives and we unzip
 				foreach($plugins as $plugin) {
 
-					// We verify if we have to retrive somes plugins via the WP Quick Install "plugins" folder
+					// verify if we have to retrieve plugins via the WP Quick Install "plugins" folder
 					if(preg_match('#(.*).zip$#', $plugin) == 1) {
 
 						$zip = new ZipArchive;
@@ -523,10 +532,10 @@ if(isset($_GET['action'])) {
 
 			if($_POST['activate_plugins'] == 1) {
 
-				/** Load WordPress Bootstrap */
+				// Load WordPress Bootstrap
 				require_once($directory.'wp-load.php');
 
-				/** Load WordPress Plugin API */
+				// Load WordPress Plugin API
 				require_once($directory.'wp-admin/includes/plugin.php');
 
 				// Activation
@@ -545,6 +554,7 @@ if(isset($_GET['action'])) {
 			require_once($directory.'wp-load.php');
 
 			/** Load WordPress Administration Upgrade API */
+			//require_once($directory.'wp-admin/includes/l10n.php');
 			require_once($directory.'wp-admin/includes/upgrade.php');
 
 			/*--------------------------*/
@@ -577,6 +587,7 @@ if(isset($_GET['action'])) {
 		<link rel="stylesheet" href="assets/css/style.min.css" />
 		<link rel="stylesheet" href="assets/css/buttons.min.css" />
 		<link rel="stylesheet" href="assets/css/bootstrap.min.css" />
+		<script src="assets/js/jquery.min.js"></script>
 	</head>
 	<body class="wp-core-ui">
 	<h1 id="logo"><a href="http://wp-quick-install.com">WordPress</a></h1>
@@ -587,10 +598,10 @@ if(isset($_GET['action'])) {
 
 		<div id="response"></div>
 		<div class="progress" style="display:none;">
-			<div class="progress-bar progress-bar-striped active" style="width: 0%;"></div>
+			<div class="progress-bar progress-bar-striped active" style="width: 0;"></div>
 		</div>
 		<div id="success" style="display:none; margin: 10px 0;">
-			<h1 style="margin: 0"><?php echo _('The world is yours'); ?></h1>
+			<h1 style="margin: 0"><?php echo _('The world is yours!'); ?></h1>
 			<p><?php echo _('WordPress has been installed.'); ?></p>
 		</div>
 		<form method="post" action="">
@@ -701,7 +712,7 @@ if(isset($_GET['action'])) {
 		<p><?php echo _('Enter the information below for your personal theme.'); ?></p>
 
 		<div class="alert alert-info">
-			<p style="margin:0px; padding:0px;"><?php echo _('WP Quick Install will automatically install your theme if it\'s on wp-quick-install folder and named theme.zip'); ?></p>
+			<p style="margin:0; padding:0;"><?php echo _('WP Quick Install will automatically install your theme if it\'s on wp-quick-install folder and named theme.zip'); ?></p>
 		</div>
 		<table class="form-table">
 			<tr>
@@ -846,16 +857,15 @@ if(isset($_GET['action'])) {
 		<p class="step"><span id="submit" class="button button-large"><?php echo _('Install WordPress'); ?></span></p>
 		</form>
 
-		<script src="assets/js/jquery-1.8.3.min.js"></script>
 		<script>var data = <?php echo $data; ?>;</script>
 		<script src="assets/js/script.js"></script>
 	<?php
 	} else {
 		?>
 
-		<div class="alert alert-error" style="margin-bottom: 0px;">
+		<div class="alert alert-error" style="margin-bottom: 0;">
 			<strong><?php echo _('Warning !'); ?></strong>
-			<p style="margin-bottom:0px;"><?php echo _('You don\'t have the good permissions rights on ').basename($parent_dir)._('. Thank you to set the good files permissions.'); ?></p>
+			<p style="margin-bottom:0;"><?php echo _('You don\'t have the good permissions rights on ').basename($parent_dir)._('. Thank you to set the good files permissions.'); ?></p>
 		</div>
 
 	<?php
