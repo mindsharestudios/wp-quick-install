@@ -21,7 +21,7 @@ require('inc/functions.php');
 
 // Force URL with index.php
 $req_uri = explode('/', trim($_SERVER['REQUEST_URI'], '/'));
-if(empty($_GET) && end($req_uri) == 'wp-quick-install') {
+if(empty($_GET) && end($req_uri) == 'wp-quick-install-master') {
 	header('Location: index.php');
 	die();
 }
@@ -48,7 +48,7 @@ $directory = !empty($_POST['directory']) ? $_POST['directory'] : '..';
 $directory = rtrim(realpath($directory), '/\\').'/'; // trailingslashit
 // get the WP URL
 $url = wpqi_get_url();
-$url = str_replace(array('wp-quick-install/index.php', 'wp-quick-install/'), '', $url);
+$url = str_replace(array('wp-quick-install-master/index.php', 'wp-quick-install-master/'), '', $url);
 $url = rtrim(realpath($url), '/\\').'/'; // trailingslashit
 
 if(isset($_GET['action'])) {
@@ -609,7 +609,7 @@ if(isset($_GET['action'])) {
 			<strong><?php echo _('Warning'); ?></strong>
 		</div>
 		<h1><?php echo _('Warning'); ?></h1>
-		<p><?php echo _('This file must be in the wp-quick-install folder and not be present in the root of your project.'); ?></p>
+		<p><?php echo _('This file must be in the wp-quick-install-master folder and not be present in the root of your project.'); ?></p>
 
 		<h1><?php echo _('Database Informations'); ?></h1>
 		<p><?php echo _("Below you should enter your database connection details. If you&#8217;re not sure about these, contact your host."); ?></p>
@@ -712,7 +712,7 @@ if(isset($_GET['action'])) {
 		<p><?php echo _('Enter the information below for your personal theme.'); ?></p>
 
 		<div class="alert alert-info">
-			<p style="margin:0; padding:0;"><?php echo _('WP Quick Install will automatically install your theme if it\'s on wp-quick-install folder and named theme.zip'); ?></p>
+			<p style="margin:0; padding:0;"><?php echo _('WP Quick Install will automatically install your theme if it\'s on wp-quick-install-master folder and named theme.zip'); ?></p>
 		</div>
 		<table class="form-table">
 			<tr>
@@ -747,7 +747,7 @@ if(isset($_GET['action'])) {
 			<tr>
 				<th scope="row">
 					<label for="plugins"><?php echo _('Premium Extensions'); ?></label>
-					<p><?php echo _('Zip Archives have to be in the <em>plugins</em> folder at the <em>wp-quick-install</em> root folder.'); ?></p>
+					<p><?php echo _('Zip Archives have to be in the <em>plugins</em> folder at the <em>wp-quick-install-master</em> root folder.'); ?></p>
 				</th>
 				<td><label><input type="checkbox" id="plugins_premium" name="plugins_premium" value="1" /> <?php echo _('Install the premium extensions after WordPress installation.'); ?></label></td>
 			</tr>

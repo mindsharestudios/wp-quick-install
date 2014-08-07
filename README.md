@@ -5,7 +5,7 @@ WP Quick Install is the easiest way to install WordPress.
 
 A lightweight script which automatically downloads and install WordPress, plugins and themes you want.
 
-Simply download the .zip archive and go to *wp-quick-install/index.php*
+Simply download the .zip archive and go to *wp-quick-install-master/index.php*
 
 Changelog
 ================
@@ -25,7 +25,7 @@ Changelog
 1.3.1
 -----------
 
-* Fix error for PHP > 5.5: Strict standards: Only variables should be passed by reference in ../wp-quick-install/index.php on line 10
+* Fix error for PHP > 5.5: Strict standards: Only variables should be passed by reference in ../wp-quick-install-master/index.php on line 10
 
 1.3
 -----------
