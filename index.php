@@ -1,13 +1,35 @@
 <?php
 /*
-Script Name: WP Quick Install
-Author: Jonathan Buttigieg
-Contributors: Julio Potier
-Script URI: http://wp-quick-install.com
-Version: 1.3.1
-Licence: GPLv3
-Last Update: 11 jul 14
+Script Name: wp-quick-install
+Script URI: https://github.com/mindsharestudios/wp-quick-install
+Description: WP Quick Install is the easiest way to install WordPress.
+Version: 0.9
+Author: Mindshare Studios, Inc.
+Author URI: http://mind.sh/are/
+License: GNU General Public License v4
+License URI: LICENSE
 */
+
+/**
+ *
+ * Copyright 2014  Mindshare Studios, Inc. (http://mind.sh/are/)
+ * Forked from WP Quick Install by Jonathan Buttigieg and Julio Potier
+ * http://wp-quick-install.com (Version: 1.3.1)
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License, version 3, as
+ * published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ *
+ */
 
 @set_time_limit(0);
 
@@ -46,10 +68,6 @@ if(file_exists('data.ini')) {
 // We add  ../ to directory if no path is provided
 $directory = !empty($_POST['directory']) ? $_POST['directory'] : '..';
 $directory = rtrim(realpath($directory), '/\\').'/'; // trailingslashit
-// get the WP URL
-$url = wpqi_get_url();
-$url = str_replace(array('wp-quick-install-master/index.php', 'wp-quick-install-master/'), '', $url);
-$url = rtrim(realpath($url), '/\\').'/'; // trailingslashit
 
 if(isset($_GET['action'])) {
 
@@ -59,9 +77,9 @@ if(isset($_GET['action'])) {
 
 			$data = array();
 
-			/*--------------------------*/
-			/*	We verify if we can connect to DB or WP is not installed yet
-			/*--------------------------*/
+			// --------------------------
+			//	We verify if we can connect to DB or WP is not installed yet
+			// --------------------------
 
 			// DB Test
 			try {
@@ -73,6 +91,10 @@ if(isset($_GET['action'])) {
 			// WordPress test
 			if(file_exists($directory.'wp-config.php')) {
 				$data['wp'] = "error directory";
+			}
+
+			if(!array_key_exists('home_url', $_POST) || !isset($_POST['home_url'])) {
+				$data['home_url'] = "please enter your Site URL";
 			}
 
 			// We send the response
@@ -88,9 +110,9 @@ if(isset($_GET['action'])) {
 			// Get WordPress data
 			$wp = json_decode(file_get_contents(WP_API_CORE.$language))->offers[0];
 
-			/*--------------------------*/
-			/*	We download the latest version of WordPress
-			/*--------------------------*/
+			// --------------------------
+			//	We download the latest version of WordPress
+			// --------------------------
 
 			if(!file_exists(WPQI_CACHE_CORE_PATH.'wordpress-'.$wp->version.'-'.$language.'.zip')) {
 				file_put_contents(WPQI_CACHE_CORE_PATH.'wordpress-'.$wp->version.'-'.$language.'.zip', file_get_contents($wp->download));
@@ -106,9 +128,9 @@ if(isset($_GET['action'])) {
 			// Get WordPress data
 			$wp = json_decode(file_get_contents(WP_API_CORE.$language))->offers[0];
 
-			/*--------------------------*/
-			/*	We create the website folder with the files and the WordPress folder
-			/*--------------------------*/
+			// --------------------------
+			//	We create the website folder with the files and the WordPress folder
+			// --------------------------
 
 			// If we want to put WordPress in a subfolder we create it
 			if(!file_exists($directory)) {
@@ -151,9 +173,9 @@ if(isset($_GET['action'])) {
 
 		case "wp_config" :
 
-			/*--------------------------*/
-			/*	Let's create the wp-config file
-			/*--------------------------*/
+			// --------------------------
+			//	Let's create the wp-config file
+			// --------------------------
 
 			// We retrieve each line as an array
 			$config_file = file($directory.'wp-config-sample.php');
@@ -266,11 +288,13 @@ if(isset($_GET['action'])) {
 
 		case "install_wp" :
 
-			/*--------------------------*/
-			/*	Let's install WordPress database
-			/*--------------------------*/
+			// --------------------------
+			//	Let's install WordPress database
+			// --------------------------
 
-			//die($directory);
+			$homeurl = $_POST['home_url'];
+			//die(realpath($homeurl));
+
 			/** Load WordPress Bootstrap */
 			require_once($directory.'wp-load.php');
 
@@ -284,35 +308,28 @@ if(isset($_GET['action'])) {
 			wp_install($_POST['weblog_title'], $_POST['user_login'], $_POST['admin_email'], (int) $_POST['blog_public'], '', $_POST['admin_password']);
 
 			// We update the options with the right siteurl and homeurl value
-//			$protocol = !is_ssl() ? 'http' : 'https';
-//			$get = basename(dirname(__FILE__)).'/index.php/wp-admin/install.php?action=install_wp';
-//			$dir = str_replace('../', '', $directory);
-//			$link = $protocol.'://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
-//			$url = str_replace($get, $dir, $link);
-//			$url = trim($url, '/');
+			update_option('siteurl', $homeurl);
+			update_option('home', $homeurl);
 
-			update_option('siteurl', $url);
-			update_option('home', $url);
-
-			/*--------------------------*/
-			/*	We remove the default content
-			/*--------------------------*/
+			// --------------------------
+			//	We remove the default content
+			// --------------------------
 
 			if($_POST['default_content'] == '1') {
 				wp_delete_post(1, TRUE); // We remove the article "Hello World"
 				wp_delete_post(2, TRUE); // We remove the "Example page"
 			}
 
-			/*--------------------------*/
-			/*	We update permalinks
-			/*--------------------------*/
+			// --------------------------
+			//	We update permalinks
+			// --------------------------
 			if(!empty($_POST['permalink_structure'])) {
 				update_option('permalink_structure', $_POST['permalink_structure']);
 			}
 
-			/*--------------------------*/
-			/*	We update the media settings
-			/*--------------------------*/
+			// --------------------------
+			//	We update the media settings
+			// --------------------------
 
 			if(!empty($_POST['thumbnail_size_w']) || !empty($_POST['thumbnail_size_h'])) {
 				update_option('thumbnail_size_w', (int) $_POST['thumbnail_size_w']);
@@ -332,9 +349,9 @@ if(isset($_GET['action'])) {
 
 			update_option('uploads_use_yearmonth_folders', (int) $_POST['uploads_use_yearmonth_folders']);
 
-			/*--------------------------*/
-			/*	We add the pages we found in the data.ini file
-			/*--------------------------*/
+			// --------------------------
+			//	We add the pages we found in the data.ini file
+			// --------------------------
 
 			// We check if data.ini exists
 			if(file_exists('data.ini')) {
@@ -419,9 +436,9 @@ if(isset($_GET['action'])) {
 			/** Load WordPress Administration Upgrade API */
 			require_once($directory.'wp-admin/includes/upgrade.php');
 
-			/*--------------------------*/
-			/*	We install the new theme
-			/*--------------------------*/
+			// --------------------------
+			//	We install the new theme
+			// --------------------------
 
 			// We verify if theme.zip exists
 			if(file_exists('theme.zip')) {
@@ -463,9 +480,9 @@ if(isset($_GET['action'])) {
 
 		case "install_plugins" :
 
-			/*--------------------------*/
-			/*	Let's retrieve the plugin folder
-			/*--------------------------*/
+			// --------------------------
+			//	Let's retrieve the plugin folder
+			// --------------------------
 
 			if(!empty($_POST['plugins'])) {
 
@@ -526,9 +543,9 @@ if(isset($_GET['action'])) {
 				}
 			}
 
-			/*--------------------------*/
-			/*	We activate extensions
-			/*--------------------------*/
+			// --------------------------
+			//	We activate extensions
+			// --------------------------
 
 			if($_POST['activate_plugins'] == 1) {
 
@@ -546,20 +563,19 @@ if(isset($_GET['action'])) {
 
 		case "success" :
 
-			/*--------------------------*/
-			/*	If we have a success we add the link to the admin and the website
-			/*--------------------------*/
+			// --------------------------
+			//	If we have a success we add the link to the admin and the website
+			// --------------------------
 
 			/** Load WordPress Bootstrap */
 			require_once($directory.'wp-load.php');
 
 			/** Load WordPress Administration Upgrade API */
-			//require_once($directory.'wp-admin/includes/l10n.php');
 			require_once($directory.'wp-admin/includes/upgrade.php');
 
-			/*--------------------------*/
-			/*	We update permalinks
-			/*--------------------------*/
+			// --------------------------
+			//	We update permalinks
+			// --------------------------
 			if(!empty($_POST['permalink_structure'])) {
 				file_put_contents($directory.'.htaccess', NULL);
 				flush_rewrite_rules();
@@ -608,11 +624,11 @@ if(isset($_GET['action'])) {
 		<div id="errors" class="alert alert-danger" style="display:none;">
 			<strong><?php echo _('Warning'); ?></strong>
 		</div>
-		<h1><?php echo _('Warning'); ?></h1>
-		<p><?php echo _('This file must be in the wp-quick-install-master folder and not be present in the root of your project.'); ?></p>
+		<h1><?php echo _('Please Note'); ?></h1>
+		<p><?php echo _('This file must be in the <code>wp-quick-install-master</code> folder and not be present in the root of your project.'); ?></p>
 
-		<h1><?php echo _('Database Informations'); ?></h1>
-		<p><?php echo _("Below you should enter your database connection details. If you&#8217;re not sure about these, contact your host."); ?></p>
+		<h1><?php echo _('Database Information'); ?></h1>
+		<p><?php echo _("Enter your database connection info. If you&#8217;re not sure about these, contact your host."); ?></p>
 		<table class="form-table">
 			<tr>
 				<th scope="row"><label for="dbname"><?php echo _('Database name'); ?></label></th>
@@ -647,7 +663,7 @@ if(isset($_GET['action'])) {
 				<td><?php echo _('If you want to delete the default content added par WordPress (post, page, comment and links).'); ?></td>
 			</tr>
 		</table>
-		<h1><?php echo _('Required Informations'); ?></h1>
+		<h1><?php echo _('Required Information'); ?></h1>
 		<p><?php echo _('Thank you to provide the following information. Don\'t worry, you will be able to change it later.'); ?></p>
 		<table class="form-table">
 			<tr>
@@ -680,6 +696,10 @@ if(isset($_GET['action'])) {
 				<td><input name="weblog_title" type="text" id="weblog_title" size="25" value="" class="required" /></td>
 			</tr>
 			<tr>
+				<th scope="row"><label for="weblog_title"><?php echo _('Site URL'); ?></label></th>
+				<td><input name="home_url" type="text" id="home_url" size="25" value="<?php $home_url = parse_url(wpqi_get_url()); echo $home_url['scheme'].'://'.$home_url['host'].'/'; ?>" class="required" /></td>
+			</tr>
+			<tr>
 				<th scope="row"><label for="user_login"><?php echo _('Username'); ?></label></th>
 				<td>
 					<input name="user_login" type="text" id="user_login" size="25" value="" class="required" />
@@ -708,7 +728,7 @@ if(isset($_GET['action'])) {
 				</td>
 			</tr>
 		</table>
-		<h1><?php echo _('Theme Informations'); ?></h1>
+		<h1><?php echo _('Theme Information'); ?></h1>
 		<p><?php echo _('Enter the information below for your personal theme.'); ?></p>
 
 		<div class="alert alert-info">
@@ -731,7 +751,7 @@ if(isset($_GET['action'])) {
 					</label></td>
 			</tr>
 		</table>
-		<h1><?php echo _('Extensions Informations'); ?></h1>
+		<h1><?php echo _('Extensions Information'); ?></h1>
 		<p><?php echo _('Simply enter below the extensions that should be addend during the installation.'); ?></p>
 		<table class="form-table">
 			<tr>
@@ -758,7 +778,7 @@ if(isset($_GET['action'])) {
 				<td><label><input type="checkbox" name="activate_plugins" id="activate_plugins" value="1" /> <?php echo _('Activate the extensions after WordPress installation.'); ?></label></td>
 			</tr>
 		</table>
-		<h1><?php echo _('Permalinks Informations'); ?></h1>
+		<h1><?php echo _('Permalinks Information'); ?></h1>
 		<p><?php echo sprintf(_('By default WordPress uses web URLs which have question marks and lots of numbers in them; however, WordPress offers you the ability to create a custom URL structure for your permalinks and archives. This can improve the aesthetics, usability, and forward-compatibility of your links. A <a href="%s">number of tags are available</a>.'), 'http://codex.wordpress.org/Using_Permalinks'); ?></p>
 		<table class="form-table">
 			<tr>
@@ -770,7 +790,7 @@ if(isset($_GET['action'])) {
 				</td>
 			</tr>
 		</table>
-		<h1><?php echo _('Media Informations'); ?></h1>
+		<h1><?php echo _('Media Information'); ?></h1>
 		<p><?php echo _('Specified dimensions below determine the maximum dimensions (in pixels) to use when inserting an image into the body of an article.'); ?></p>
 		<table class="form-table">
 			<tr>
@@ -814,7 +834,7 @@ if(isset($_GET['action'])) {
 				</td>
 			</tr>
 		</table>
-		<h1><?php echo _('wp-config.php Informations'); ?></h1>
+		<h1><?php echo _('wp-config.php Information'); ?></h1>
 		<p><?php echo _('Choose below the additional constants you want to add in <strong>wp-config.php</strong>'); ?></p>
 		<table class="form-table">
 			<tr>
