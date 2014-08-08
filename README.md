@@ -7,9 +7,7 @@ A lightweight script which automatically downloads and install WordPress, plugin
 
 == Usage ==
 
-Simply download the .zip archive and go to *wp-quick-install-master/index.php*
-
-Or for an even quicker install run this command from your terminal:
+Just run this command from your terminal and then visit go to *wp-quick-install-master/index.php* in your browser:
 
 ```
 wget https://github.com/mindsharestudios/wp-quick-install/archive/master.zip; unzip master.zip; rm -rvf master.zip; echo " "; echo "======="; echo "The  latest version of WP Quick Install is ready to run. Remember to delete this folder after your are done."; echo "======="; ls -lA;
