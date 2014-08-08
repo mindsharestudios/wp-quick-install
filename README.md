@@ -19,7 +19,7 @@ Or you can add this as a BASH alias:
 unalias wp-quick;
 
 # add the installer as a BASH alias
-alias wp-quick='wget https://github.com/mindsharestudios/wp-quick-install/archive/master.zip; unzip master.zip; rm -rvf master.zip; echo " "; echo "======="; echo "The  latest version of WP Quick Install is ready to run. Remember to delete this folder after your are done."; echo "======="; ls -lA;'
+alias wp-quick="wget https://github.com/mindsharestudios/wp-quick-install/archive/master.zip; unzip master.zip; rm -rvf master.zip; echo ' '; echo '======='; echo 'The  latest version of WP Quick Install is ready to run. Remember to delete this folder after your are done.'; echo '======='; ls -lA;"
 
 # source the new alias
 source ~/.bashrc;
