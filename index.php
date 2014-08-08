@@ -192,7 +192,7 @@ if(isset($_GET['action'])) {
 			foreach($config_file as &$line) {
 
 				if('$table_prefix  =' == substr($line, 0, 16)) {
-					$line = '$table_prefix  = \''.sanit($_POST['prefix'])."';\r\n";
+					$line = '$table_prefix  = \''.sanit($_POST['prefix'])."';".PHP_EOL;
 					continue;
 				}
 
@@ -207,22 +207,23 @@ if(isset($_GET['action'])) {
 
 						// Debug mod
 						if((int) $_POST['debug'] == 1) {
-							$line = "define('WP_DEBUG', true);\r\n";
-							$line .= "if ( WP_DEBUG ) {\r\n";
+							$line = "define('WP_DEBUG', true);".PHP_EOL;
+							$line .= "if (WP_DEBUG) {".PHP_EOL;
+							$line = "define('SAVEQUERIES', TRUE);".PHP_EOL;
 
 							// Display error
 							if((int) $_POST['debug_display'] == 1) {
-								$line .= "define('WP_DEBUG_DISPLAY', true);\r\n";
+								$line .= "define('WP_DEBUG_DISPLAY', TRUE);".PHP_EOL;
 							} else {
-								$line .= "define('WP_DEBUG_DISPLAY', false);\r\n";
-								$line .= "@ini_set( 'display_errors', 0 );\r\n";
+								$line .= "define('WP_DEBUG_DISPLAY', FALSE);".PHP_EOL;
+								$line .= "@ini_set( 'display_errors', 0 );".PHP_EOL;
 							}
 
 							// To write error in a log files
 							if((int) $_POST['debug_log'] == 1) {
-								$line .= "define('WP_DEBUG_LOG', true);\r\n";
+								$line .= "define('WP_DEBUG_LOG', TRUE);".PHP_EOL;
 							}
-							$line .= "}\r\n";
+							$line .= "}".PHP_EOL;
 						}
 
 						// We add the extras constant
@@ -235,27 +236,28 @@ if(isset($_GET['action'])) {
 						}
 
 						if((int) $_POST['disallow_file_edit'] == 1) {
-							$line .= "define('DISALLOW_FILE_EDIT', true);";
+							$line .= "define('DISALLOW_FILE_EDIT', TRUE);";
 						}
 
 						if((int) $_POST['autosave_interval'] >= 60) {
 							$line .= "define('AUTOSAVE_INTERVAL', ".(int) $_POST['autosave_interval'].");";
 						}
 
-						$line .= "define('WP_MEMORY_LIMIT', '256M');"."\r\n";
+						$line .= "define('WP_MEMORY_LIMIT', '256M');"."".PHP_EOL;
+						$line .= "define('WP_MAX_MEMORY_LIMIT', '256M');"."".PHP_EOL;
 
 						break;
 					case 'DB_NAME'     :
-						$line = "define('DB_NAME', '".sanit($_POST['dbname'])."');\r\n";
+						$line = "define('DB_NAME', '".sanit($_POST['dbname'])."');".PHP_EOL;
 						break;
 					case 'DB_USER'     :
-						$line = "define('DB_USER', '".sanit($_POST['uname'])."');\r\n";
+						$line = "define('DB_USER', '".sanit($_POST['uname'])."');".PHP_EOL;
 						break;
 					case 'DB_PASSWORD' :
-						$line = "define('DB_PASSWORD', '".sanit($_POST['pwd'])."');\r\n";
+						$line = "define('DB_PASSWORD', '".sanit($_POST['pwd'])."');".PHP_EOL;
 						break;
 					case 'DB_HOST'     :
-						$line = "define('DB_HOST', '".sanit($_POST['dbhost'])."');\r\n";
+						$line = "define('DB_HOST', '".sanit($_POST['dbhost'])."');".PHP_EOL;
 						break;
 					case 'AUTH_KEY'         :
 					case 'SECURE_AUTH_KEY'  :
@@ -265,11 +267,11 @@ if(isset($_GET['action'])) {
 					case 'SECURE_AUTH_SALT' :
 					case 'LOGGED_IN_SALT'   :
 					case 'NONCE_SALT'       :
-						$line = "define('".$constant."', '".$secret_keys[$key++]."');\r\n";
-						break;
+					$line = "define('".$constant."', '".$secret_keys[$key++]."');".PHP_EOL;
+					break;
 
 					case 'WPLANG' :
-						$line = "define('WPLANG', '".sanit($_POST['language'])."');\r\n";
+						$line = "define('WPLANG', '".sanit($_POST['language'])."');".PHP_EOL;
 						break;
 				}
 			}
