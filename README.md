@@ -5,8 +5,7 @@ WP Quick Install is the easiest way to install WordPress.
 
 A lightweight script which automatically downloads and install WordPress, plugins and themes you want.
 
-== Usage ==
-
+## Usage
 Just run this command from your terminal and then visit go to *wp-quick-install-master/index.php* in your browser:
 
 ```
@@ -33,7 +32,7 @@ wp-quick;
 Changelog
 ================
 
-=0.9=
+==0.9
 -----------
 
 * Fixed most major bugs since forking project
