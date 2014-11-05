@@ -3,7 +3,7 @@
 Script Name: wp-quick-install
 Script URI: https://github.com/mindsharestudios/wp-quick-install
 Description: WP Quick Install is the easiest way to install WordPress.
-Version: 0.9
+Version: 0.9.1
 Author: Mindshare Studios, Inc.
 Author URI: http://mind.sh/are/
 License: GNU General Public License v4
@@ -205,11 +205,11 @@ if(isset($_GET['action'])) {
 				switch($constant) {
 					case 'WP_DEBUG'       :
 
-						// Debug mod
+						// Debug mode
 						if((int) $_POST['debug'] == 1) {
 							$line = "define('WP_DEBUG', true);".PHP_EOL;
 							$line .= "if (WP_DEBUG) {".PHP_EOL;
-							$line = "define('SAVEQUERIES', TRUE);".PHP_EOL;
+							$line .= "define('SAVEQUERIES', TRUE);".PHP_EOL;
 
 							// Display error
 							if((int) $_POST['debug_display'] == 1) {

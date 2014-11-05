@@ -32,7 +32,10 @@ wp-quick;
 Changelog
 ================
 
+##0.9.1
+-----------
+* Fixed fatal error if debug was enabled
+
 ##0.9
 -----------
-
 * Fixed most major bugs since forking project
