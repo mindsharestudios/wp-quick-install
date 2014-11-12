@@ -28,7 +28,9 @@ source ~/.bashrc;
 wp-quick;
 
 ```
-FAQs
+
+FAQ
+================
 
 If you run into issues like 500 server errors after unzipping the files try resetting the permissions on the wp-quick-install-master folder as follows:
 
