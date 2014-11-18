@@ -3,7 +3,7 @@
 Script Name: wp-quick-install
 Script URI: https://github.com/mindsharestudios/wp-quick-install
 Description: WP Quick Install is the easiest way to install WordPress.
-Version: 0.9.1
+Version: 0.9.2
 Author: Mindshare Studios, Inc.
 Author URI: http://mind.sh/are/
 License: GNU General Public License v4
@@ -84,7 +84,8 @@ if(isset($_GET['action'])) {
 			// DB Test
 			try {
 				$db = new PDO('mysql:host='.$_POST['dbhost'].';dbname='.$_POST['dbname'], $_POST['uname'], $_POST['pwd']);
-			} catch(Exception $e) {
+			}
+			catch(Exception $e) {
 				$data['db'] = "error establishing connection";
 			}
 
@@ -228,19 +229,19 @@ if(isset($_GET['action'])) {
 
 						// We add the extras constant
 						if(!empty($_POST['uploads'])) {
-							$line .= "define('UPLOADS', '".sanit($_POST['uploads'])."');";
+							$line .= "define('UPLOADS', '".sanit($_POST['uploads'])."');".PHP_EOL;
 						}
 
 						if((int) $_POST['post_revisions'] >= 0) {
-							$line .= "define('WP_POST_REVISIONS', ".(int) $_POST['post_revisions'].");";
+							$line .= "define('WP_POST_REVISIONS', ".(int) $_POST['post_revisions'].");".PHP_EOL;
 						}
 
 						if((int) $_POST['disallow_file_edit'] == 1) {
-							$line .= "define('DISALLOW_FILE_EDIT', TRUE);";
+							$line .= "define('DISALLOW_FILE_EDIT', FALSE);".PHP_EOL;
 						}
 
 						if((int) $_POST['autosave_interval'] >= 60) {
-							$line .= "define('AUTOSAVE_INTERVAL', ".(int) $_POST['autosave_interval'].");";
+							$line .= "define('AUTOSAVE_INTERVAL', ".(int) $_POST['autosave_interval'].");".PHP_EOL;
 						}
 
 						$line .= "define('WP_MEMORY_LIMIT', '256M');"."".PHP_EOL;
@@ -267,8 +268,8 @@ if(isset($_GET['action'])) {
 					case 'SECURE_AUTH_SALT' :
 					case 'LOGGED_IN_SALT'   :
 					case 'NONCE_SALT'       :
-					$line = "define('".$constant."', '".$secret_keys[$key++]."');".PHP_EOL;
-					break;
+						$line = "define('".$constant."', '".$secret_keys[$key++]."');".PHP_EOL;
+						break;
 
 					case 'WPLANG' :
 						$line = "define('WPLANG', '".sanit($_POST['language'])."');".PHP_EOL;
@@ -699,7 +700,8 @@ if(isset($_GET['action'])) {
 			</tr>
 			<tr>
 				<th scope="row"><label for="weblog_title"><?php echo _('Site URL'); ?></label></th>
-				<td><input name="home_url" type="text" id="home_url" size="25" value="<?php $home_url = parse_url(wpqi_get_url()); echo $home_url['scheme'].'://'.$home_url['host'].'/'; ?>" class="required" /></td>
+				<td><input name="home_url" type="text" id="home_url" size="25" value="<?php $home_url = parse_url(wpqi_get_url());
+					echo $home_url['scheme'].'://'.$home_url['host'].'/'; ?>" class="required" /></td>
 			</tr>
 			<tr>
 				<th scope="row"><label for="user_login"><?php echo _('Username'); ?></label></th>

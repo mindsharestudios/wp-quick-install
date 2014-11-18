@@ -48,6 +48,9 @@ find . -type f -print0 | xargs -0 chmod 0644
 Changelog
 ================
 
+##0.9.2
+* Tweaks in wp-config.php
+
 ##0.9.1
 -----------
 * Fixed fatal error if debug was enabled
