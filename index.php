@@ -3,7 +3,7 @@
 Script Name: wp-quick-install
 Script URI: https://github.com/mindsharestudios/wp-quick-install
 Description: WP Quick Install is the easiest way to install WordPress.
-Version: 0.9.2
+Version: 0.9.3
 Author: Mindshare Studios, Inc.
 Author URI: http://mind.sh/are/
 License: GNU General Public License v4
@@ -239,7 +239,7 @@ if(isset($_GET['action'])) {
 						}
 
 						if((int) $_POST['disallow_file_edit'] == 1) {
-							$line .= "define('DISALLOW_FILE_EDIT', FALSE);".PHP_EOL;
+							$line .= "define('DISALLOW_FILE_EDIT', TRUE);".PHP_EOL;
 						}
 
 						if((int) $_POST['autosave_interval'] >= 60) {
@@ -702,8 +702,7 @@ if(isset($_GET['action'])) {
 			</tr>
 			<tr>
 				<th scope="row"><label for="weblog_title"><?php echo _('Site URL'); ?></label></th>
-				<td><input name="home_url" type="text" id="home_url" size="25" value="<?php $home_url = parse_url(wpqi_get_url());
-					echo $home_url['scheme'].'://'.$home_url['host'].'/'; ?>" class="required" /></td>
+				<td><input name="home_url" type="text" id="home_url" size="25" value="<?php $home_url = parse_url(wpqi_get_url()); echo $home_url['scheme'].'://'.$home_url['host'].'/'; ?>" class="required" /></td>
 			</tr>
 			<tr>
 				<th scope="row"><label for="user_login"><?php echo _('Username'); ?></label></th>
@@ -856,7 +855,7 @@ if(isset($_GET['action'])) {
 				<th scope="row">
 					<label for="plugins"><?php echo _('Editor'); ?></label>
 				</th>
-				<td><label><input type="checkbox" id="disallow_file_edit" name="disallow_file_edit" value="1" checked='checked' /><?php echo _('Disable theme and extensions editor'); ?></label></td>
+				<td><label><input type="checkbox" id="disallow_file_edit" name="disallow_file_edit" value="0" checked='checked' /><?php echo _('Disable theme and extensions editor'); ?></label></td>
 			</tr>
 			<tr>
 				<th scope="row">

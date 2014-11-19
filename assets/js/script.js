@@ -273,13 +273,13 @@ $(document).ready(function() {
 					});
 				} else {
 					// If there is an error
-					$('html,body').animate({ scrollTop: $('html,body').offset().top }, 'slow');
+					$('html,body').animate({scrollTop: $('html,body').offset().top}, 'slow');
 				}
 			});
 
 		} else {
 			// If there is an error
-			$('html,body').animate({ scrollTop: $('input.error:first').offset().top - 20 }, 'slow');
+			$('html,body').animate({scrollTop: $('input.error:first').offset().top - 20}, 'slow');
 		}
 		return false;
 	});
@@ -292,7 +292,6 @@ $(document).ready(function() {
 			wp_config();
 		});
 	}
-
 
 	var config_done, install_done, theme_done, plugins_done = false;
 	// Let's create the wp-config.php file
