@@ -855,7 +855,7 @@ if(isset($_GET['action'])) {
 				<th scope="row">
 					<label for="plugins"><?php echo _('Editor'); ?></label>
 				</th>
-				<td><label><input type="checkbox" id="disallow_file_edit" name="disallow_file_edit" value="0"  /><?php echo _('Disable theme and extensions editor'); ?></label></td>
+				<td><label><input type="checkbox" id="disallow_file_edit" name="disallow_file_edit" value="0" /><?php echo _('Disable theme and extensions editor'); ?></label></td>
 			</tr>
 			<tr>
 				<th scope="row">
