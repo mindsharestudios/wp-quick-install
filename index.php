@@ -38,6 +38,8 @@ define('WPQI_CACHE_PATH', 'cache/');
 define('WPQI_CACHE_CORE_PATH', WPQI_CACHE_PATH.'core/');
 define('WPQI_CACHE_PLUGINS_PATH', getcwd().'/plugins/');
 define('WPQI_PREMIUM_PLUGINS_PATH', 'plugins/');
+define('WPQI_FILE_PERMS', 0644);
+define('WPQI_DIR_PERMS', 0755);
 
 require('inc/functions.php');
 
@@ -138,7 +140,7 @@ if(isset($_GET['action'])) {
 				mkdir($directory);
 			}
 
-			chmod($directory, 0755);
+			chmod($directory, WPQI_DIR_PERMS);
 
 			$zip = new ZipArchive;
 
@@ -249,16 +251,16 @@ if(isset($_GET['action'])) {
 
 						break;
 					case 'DB_NAME'     :
-						$line = "define('DB_NAME', '".sanit($_POST['dbname'])."');".PHP_EOL;
+						$line .= "define('DB_NAME', '".sanit($_POST['dbname'])."');".PHP_EOL;
 						break;
 					case 'DB_USER'     :
-						$line = "define('DB_USER', '".sanit($_POST['uname'])."');".PHP_EOL;
+						$line .= "define('DB_USER', '".sanit($_POST['uname'])."');".PHP_EOL;
 						break;
 					case 'DB_PASSWORD' :
-						$line = "define('DB_PASSWORD', '".sanit($_POST['pwd'])."');".PHP_EOL;
+						$line .= "define('DB_PASSWORD', '".sanit($_POST['pwd'])."');".PHP_EOL;
 						break;
 					case 'DB_HOST'     :
-						$line = "define('DB_HOST', '".sanit($_POST['dbhost'])."');".PHP_EOL;
+						$line .= "define('DB_HOST', '".sanit($_POST['dbhost'])."');".PHP_EOL;
 						break;
 					case 'AUTH_KEY'         :
 					case 'SECURE_AUTH_KEY'  :
@@ -268,11 +270,11 @@ if(isset($_GET['action'])) {
 					case 'SECURE_AUTH_SALT' :
 					case 'LOGGED_IN_SALT'   :
 					case 'NONCE_SALT'       :
-						$line = "define('".$constant."', '".$secret_keys[$key++]."');".PHP_EOL;
+						$line .= "define('".$constant."', '".$secret_keys[$key++]."');".PHP_EOL;
 						break;
 
 					case 'WPLANG' :
-						$line = "define('WPLANG', '".sanit($_POST['language'])."');".PHP_EOL;
+						$line .= "define('WPLANG', '".sanit($_POST['language'])."');".PHP_EOL;
 						break;
 				}
 			}
@@ -285,7 +287,7 @@ if(isset($_GET['action'])) {
 			fclose($handle);
 
 			// We set the good rights to the wp-config file
-			chmod($directory.'wp-config.php', 0644);
+			chmod($directory.'wp-config.php', WPQI_FILE_PERMS);
 
 			break;
 

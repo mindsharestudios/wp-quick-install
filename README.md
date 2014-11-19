@@ -45,8 +45,14 @@ find . -type f -print0 | xargs -0 chmod 0644
 
 ```
 
+The default permissions can be changed in the header of index.php.
+
 Changelog
 ================
+
+##0.9.3
+* More config bugfixes. Added constants for permissions.
+
 
 ##0.9.2
 * Tweaks in wp-config.php
